@@ -1,0 +1,148 @@
+.register-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 500px;
+
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(25px);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.35);
+
+    transition: 0.3s ease;
+}
+
+.register-card:hover {
+    transform: translateY(-4px);
+}
+
+.register-title {
+    text-align: center;
+
+    font-size: 42px;
+    font-weight: 800;
+
+    color: white;
+
+    margin-bottom: 5px;
+}
+
+.register-subtitle {
+    text-align: center;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    margin-bottom: 15px;
+
+    font-size: 15px;
+}
+
+.register-card input {
+    width: 100%;
+
+    padding: 18px 20px;
+
+    font-size: 17px;
+
+    color: white;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 16px;
+
+    transition: 0.25s ease;
+}
+
+.register-card input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.register-card input:focus {
+    outline: none;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    border-color: rgba(99, 102, 241, 0.8);
+
+    box-shadow:
+        0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+.register-card input[type="password"] {
+    letter-spacing: 2px;
+}
+
+.register-card button {
+    margin-top: 8px;
+
+    padding: 18px;
+
+    border: none;
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #6366f1,
+        #8b5cf6
+    );
+
+    transition: 0.25s ease;
+}
+
+.register-card button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 35px rgba(99, 102, 241, 0.35);
+}
+
+.register-card button:active {
+    transform: scale(0.98);
+}
+
+.register-footer {
+    text-align: center;
+    margin-top: 10px;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+}
+
+.register-footer .link {
+    color: #8b5cf6;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.register-footer .link:hover {
+    text-decoration: underline;
+}

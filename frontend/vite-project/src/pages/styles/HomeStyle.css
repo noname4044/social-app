@@ -1,0 +1,209 @@
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: #0f172a;
+    color: #fff;
+}
+
+.home {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Создание поста */
+
+.create-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 24px;
+}
+
+.user-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-row input {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    background: #0f172a;
+    color: white;
+    outline: none;
+}
+
+.user-row input:focus {
+    border-color: #3b82f6;
+}
+
+.create-card button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.create-card button:hover {
+    background: #1d4ed8;
+}
+
+/* Аватар */
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(
+        135deg,
+        #3b82f6,
+        #8b5cf6
+    );
+
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.avatar.small {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 15px;
+}
+
+/* Лента */
+
+.feed {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Пост */
+
+.post {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 18px;
+    transition: 0.2s;
+}
+
+.post:hover {
+    border-color: #475569;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.author {
+    flex: 1;
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.author:hover {
+    color: #60a5fa;
+}
+
+/* Контент */
+
+.content {
+    margin-top: 14px;
+    line-height: 1.6;
+    color: #e2e8f0;
+    word-break: break-word;
+}
+
+/* Низ поста */
+
+.post-footer {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,.08);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-date {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* Лайк */
+
+.like-btn {
+    border: none;
+    background: #0f172a;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.like-btn:hover {
+    background: #334155;
+}
+
+/* Удаление */
+
+.delete {
+    width: 32px;
+    height: 32px;
+
+    margin-left: auto;
+
+    border: none;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(239,68,68,.15);
+    color: #ef4444;
+
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.delete:hover {
+    background: rgba(239,68,68,.25);
+}
+
+@media (max-width: 768px) {
+    .home {
+        padding: 12px;
+    }
+
+    .create-card,
+    .post {
+        border-radius: 16px;
+    }
+}
