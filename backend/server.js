@@ -1,10 +1,15 @@
 import express from "express"
 import cors from "cors"
 import db from "./db.js"
+import jwt from "jsonwebtoken"
+import bcrypt from "bcryptjs"
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+    origin: "*"
+}))
+
 app.use(express.json())
 
 db.prepare(`
@@ -24,6 +29,23 @@ CREATE TABLE IF NOT EXISTS posts (
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 )
 `).run()
+
+function auth(req, res, next) {
+    const token = req.headers.authorization?.split(" ")[1]
+
+    if (!token) {
+        return res.status(401).json({ message: "Нет токена" })
+    }
+
+    try {
+        const decoded = jwt.verify(token, "secret_key_123")
+        req.user = decoded
+        next()
+    } catch {
+        return res.status(401).json({ message: "Неверный токен" })
+    }
+}
+
 
 try {
     db.prepare(`
@@ -54,11 +76,13 @@ app.post("/register", (req, res) => {
         })
     }
 
+    const hash = bcrypt.hashSync(password, 10)
+
     try {
         db.prepare(`
             INSERT INTO users (username, password)
             VALUES (?, ?)
-        `).run(username, password)
+        `).run(username, hash)
 
         res.json({
             message: "Пользователь создан"
@@ -76,8 +100,8 @@ app.post("/login", (req, res) => {
     const user = db.prepare(`
         SELECT *
         FROM users
-        WHERE username = ? AND password = ?
-    `).get(username, password)
+        WHERE username = ?
+    `).get(username)
 
     if (!user) {
         return res.status(401).json({
@@ -85,8 +109,23 @@ app.post("/login", (req, res) => {
         })
     }
 
+    const isValid = bcrypt.compareSync(password, user.password)
+
+    if (!isValid) {
+        return res.status(401).json({
+            message: "Неверный логин или пароль"
+        })
+    }
+
+    const token = jwt.sign(
+        { id: user.id, username: user.username },
+        "secret_key_123",
+        { expiresIn: "7d" }
+    )
+
     res.json({
         message: "Вход выполнен",
+        token,
         user: {
             id: user.id,
             username: user.username
@@ -94,25 +133,6 @@ app.post("/login", (req, res) => {
     })
 })
 
-app.post("/posts", (req, res) => {
-    const { content, user_id } = req.body
-
-    if (!content || !user_id) {
-        return res.status(400).json({
-            message: "Заполните все поля"
-        })
-    }
-
-    const result = db.prepare(`
-        INSERT INTO posts (content, user_id)
-        VALUES (?, ?)
-    `).run(content, user_id)
-
-    res.json({
-        message: "Пост создан",
-        id: result.lastInsertRowid
-    })
-})
 
 app.get("/posts", (req, res) => {
     try {
@@ -140,9 +160,9 @@ users.username
     }
 })
 
-app.post("/posts/:id/like", (req, res) => {
+app.post("/posts/:id/like", auth, (req, res) => {
     const { id } = req.params
-    const { user_id } = req.body
+    const user_id = req.user.id
 
     const existingLike = db.prepare(`
         SELECT *
@@ -183,9 +203,9 @@ app.post("/posts/:id/like", (req, res) => {
     })
 })
 
-app.delete("/posts/:id", (req, res) => {
+app.delete("/posts/:id", auth, (req, res) => {
     const { id } = req.params
-    const user_id = Number(req.body.user_id)
+    const user_id = req.user.id
 
     const post = db.prepare(`
         SELECT *
@@ -228,6 +248,25 @@ app.get("/users", (req, res) => {
 
     res.json(users)
 })
+
+
+app.post("/posts", auth, (req, res) => {
+    const { content } = req.body
+
+    const user_id = req.user.id
+
+    const result = db.prepare(`
+        INSERT INTO posts (content, user_id)
+        VALUES (?, ?)
+    `).run(content, user_id)
+
+    res.json({
+        message: "Пост создан",
+        id: result.lastInsertRowid
+    })
+})
+
+
 
 app.get("/profile/:id", (req, res) => {
     const { id } = req.params
