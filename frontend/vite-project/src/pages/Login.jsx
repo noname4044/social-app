@@ -4,77 +4,88 @@ import "./styles/LoginStyle.css";
 import { useNavigate } from "react-router-dom";
 
 export function Login() {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     const login = async () => {
-        if (loading) return
+        if (loading) return;
 
         try {
-            setLoading(true)
-            const response = await API.post('login', {
+            setLoading(true);
+
+            const response = await API.post('/login', {
                 username,
                 password
-            })
+            });
 
-            alert(response.data.message)
+            // 💥 ВАЖНО: берем токен
+            const { token, user, message } = response.data;
 
-            localStorage.setItem('user', JSON.stringify(response.data.user))
-            navigate('/')
-            setUsername('')
-            setPassword('')
+            alert(message);
+
+            // 💥 сохраняем токен (главное изменение)
+            localStorage.setItem('token', token);
+
+            // (опционально) user тоже можно сохранить
+            localStorage.setItem('user', JSON.stringify(user));
+
+            navigate('/');
+
+            setUsername('');
+            setPassword('');
 
         } catch (error) {
-            alert(error.response?.data?.message)
+            alert(error.response?.data?.message || "Ошибка входа");
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     return (
-        <>
-            <div className="register-page">
-                <div className="register-card">
-                    <h1 className="register-title">Вход</h1>
+        <div className="register-page">
+            <div className="register-card">
+                <h1 className="register-title">Вход</h1>
 
-                    <p className="register-subtitle">
-                        Добро пожаловать обратно
-                    </p>
+                <p className="register-subtitle">
+                    Добро пожаловать обратно
+                </p>
 
+                <input
+                    type="text"
+                    placeholder="Имя пользователя..."
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    autoComplete="username"
+                />
 
-                    <input type="text"
-                        placeholder="Имя пользователя..."
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        autoComplete="username" />
+                <input
+                    type="password"
+                    placeholder="Введите пароль..."
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                />
 
-                    <input type="password"
-                        placeholder="Введите пароль..."
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="current-password" />
+                <button
+                    onClick={login}
+                    disabled={loading || !username || !password}
+                >
+                    {loading ? "Вход..." : "Войти"}
+                </button>
 
-
-                    <button
-                        onClick={login}
-                        disabled={loading || !username || !password}
+                <p className="register-footer">
+                    Нет аккаунта?
+                    <span
+                        className="link"
+                        onClick={() => navigate("/register")}
                     >
-                        {loading ? "Вход..." : "Войти"}
-                    </button>
-
-                    <p className="register-footer">
-                        Нет аккаунта?
-                        <span className="link"
-                        onClick={() => navigate("/register")}>
-                             Регистрация
-                             </span>
-                    </p>
-
-                </div>
+                        Регистрация
+                    </span>
+                </p>
             </div>
-        </>
-    )
+        </div>
+    );
 }

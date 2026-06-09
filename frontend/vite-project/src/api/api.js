@@ -1,5 +1,16 @@
 import axios from "axios"
 
 export const API = axios.create({
-    baseURL: "http://localhost:3000"
+    baseURL: import.meta.env.VITE_API_URL
+})
+
+// 💥 interceptor
+API.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token")
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
+
+    return config
 })
